@@ -2,11 +2,12 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Platform {
+contract Platform is Ownable {
   address private _token;
 
-  constructor(address token) {
+  constructor(address token) Ownable(msg.sender) {
     // deploy for every ERC20 on every chain: matrix nxm
     _token = token;
   }
@@ -17,7 +18,7 @@ contract Platform {
     tokenContract.approve(address(this), 10 ** 18);
   }
 
-  function charge(address from, address to, uint256 value) public {
+  function charge(address from, address to, uint256 value) public onlyOwner {
     // !!!! TODO
     // require(msg.sender == owner);
     IERC20 tokenContract = IERC20(_token);
